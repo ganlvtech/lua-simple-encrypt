@@ -1,5 +1,6 @@
 const SimpleXorEncrypt = require('./SimpleXorEncrypt');
 const ShuffleWithKey = require('./ShuffleWithKey');
+const utf8 = require('utf8');
 const compareVersion = require('compare-version');
 const luamin = require('luamin');
 
@@ -103,7 +104,7 @@ function parseOptions(options) {
 
 function encrypt(bytes, key, options = {}) {
     options = parseOptions(options);
-    let encryptedBytes = ShuffleWithKey.shuffle(SimpleXorEncrypt.encrypt(bytes, key), key);
+    let encryptedBytes = ShuffleWithKey.shuffle(SimpleXorEncrypt.encrypt(bytes, utf8.encode(key)), key);
     let code = options.keyInputCode
         + templates.main
         + options.loadFunction
