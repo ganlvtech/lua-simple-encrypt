@@ -2,19 +2,23 @@
 -- key = gg.prompt({"请输入密码："}, {""}, {"text"})
 key = "把这里替换成密码"
 -- load
-local main = loadstring((function (bytes, key)
+local main = loadstring((function (bytes, key_)
     -- http://lua-users.org/wiki/BitUtils
     function bxor(a, b)
-        local r = 0
-        for i = 0, 31 do
-            local x = a / 2 + b / 2
-            if x ~= math.floor(x) then
-                r = r + 2 ^ i
-            end
+        local XOR_l =
+        {
+           {0, 1},
+           {1, 0},
+        }
+        local pow = 1
+        local c = 0
+        while a > 0 or b > 0 do
+            c = c + (XOR_l[(a % 2) + 1][(b % 2) + 1] * pow)
             a = math.floor(a / 2)
             b = math.floor(b / 2)
+            pow = pow * 2
         end
-        return r
+        return c
     end
 
     local getDataBytes = function (bytes)
@@ -29,16 +33,16 @@ local main = loadstring((function (bytes, key)
         return result
     end
 
-    local decode = function (bytes, key)
-        if #key <= 0 then
+    local decode = function (bytes, key_)
+        if #key_ <= 0 then
             return {}
         end
         local i = 1
         local j = 1
         for i = 1, #bytes do
-            bytes[i] = bxor(bytes[i], string.byte(key, j))
+            bytes[i] = bxor(bytes[i], string.byte(key_, j))
             j = j + 1
-            if j > #key then
+            if j > #key_ then
                 j = 1
             end
         end
@@ -53,7 +57,7 @@ local main = loadstring((function (bytes, key)
         return result
     end
 
-    return bytesToString(decode(getDataBytes(bytes), key))
+    return bytesToString(decode(getDataBytes(bytes), key_))
 end)({
     -- data
 }, key))

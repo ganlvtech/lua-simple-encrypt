@@ -6,19 +6,23 @@ const luamin = require('luamin');
 const templates = {
     credit: '-- Lua simple XOR encrypt by Ganlv\n',
     main: 'local main = ',
-    decoder: '((function (bytes, key)\n' +
+    decoder: '((function (bytes, key_)\n' +
     '    -- http://lua-users.org/wiki/BitUtils\n' +
     '    function bxor(a, b)\n' +
-    '        local r = 0\n' +
-    '        for i = 0, 31 do\n' +
-    '            local x = a / 2 + b / 2\n' +
-    '            if x ~= math.floor(x) then\n' +
-    '                r = r + 2 ^ i\n' +
-    '            end\n' +
+    '        local XOR_l =\n' +
+    '        {\n' +
+    '           {0, 1},\n' +
+    '           {1, 0},\n' +
+    '        }\n' +
+    '        local pow = 1\n' +
+    '        local c = 0\n' +
+    '        while a > 0 or b > 0 do\n' +
+    '            c = c + (XOR_l[(a % 2) + 1][(b % 2) + 1] * pow)\n' +
     '            a = math.floor(a / 2)\n' +
     '            b = math.floor(b / 2)\n' +
+    '            pow = pow * 2\n' +
     '        end\n' +
-    '        return r\n' +
+    '        return c\n' +
     '    end\n' +
     '\n' +
     '    local getDataBytes = function (bytes)\n' +
@@ -33,16 +37,16 @@ const templates = {
     '        return result\n' +
     '    end\n' +
     '\n' +
-    '    local decode = function (bytes, key)\n' +
-    '        if #key <= 0 then\n' +
+    '    local decode = function (bytes, key_)\n' +
+    '        if #key_ <= 0 then\n' +
     '            return {}\n' +
     '        end\n' +
     '        local i = 1\n' +
     '        local j = 1\n' +
     '        for i = 1, #bytes do\n' +
-    '            bytes[i] = bxor(bytes[i], string.byte(key, j))\n' +
+    '            bytes[i] = bxor(bytes[i], string.byte(key_, j))\n' +
     '            j = j + 1\n' +
-    '            if j > #key then\n' +
+    '            if j > #key_ then\n' +
     '                j = 1\n' +
     '            end\n' +
     '        end\n' +
@@ -57,7 +61,7 @@ const templates = {
     '        return result\n' +
     '    end\n' +
     '\n' +
-    '    return bytesToString(decode(getDataBytes(bytes), key))\n' +
+    '    return bytesToString(decode(getDataBytes(bytes), key_))\n' +
     'end)({',
     decoderEnd: '}, key))\n' +
     'if main then\n' +
@@ -74,7 +78,7 @@ function parseOptions(options) {
             options.luaVersion = '5.2';
         }
         if (!options.keyInputCode) {
-            options.keyInputCode = 'key = gg.prompt({"请输入密码："}, {""}, {"text"})[0]\n';
+            options.keyInputCode = 'key = gg.prompt({"请输入密码："}, {""}, {"text"})[1]\n';
         }
         if (!options.keyWrongAlertCode) {
             options.keyWrongAlertCode = 'gg.alert("密码错误")';
