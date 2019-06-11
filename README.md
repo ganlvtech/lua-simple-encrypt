@@ -13,14 +13,14 @@ Open the web page with browser. Select the file and press the button. The encryp
 ## Build
 
 ```bash
-npm run install
+npm install
 npm run build
 ```
 
 ## Development
 
 ```bash
-npm run build
+npm run dev
 ```
 
 Visit <http://localhost:8080/>

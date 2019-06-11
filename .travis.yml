@@ -3,7 +3,7 @@ node_js:
   - "10"
 cache: npm
 before_script:
-  - npm run install
+  - npm install
 script:
   - npm run build
 deploy:
