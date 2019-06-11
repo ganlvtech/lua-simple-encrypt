@@ -1,4 +1,29 @@
-# Lua 简单异或加密
+# Lua Simple XOR Encrypt
+
+[![Build Status](https://travis-ci.com/ganlvtech/lua-simple-encrypt.svg?branch=master)](https://travis-ci.com/ganlvtech/lua-simple-encrypt)
+
+Ask user to input the decrypt key. XOR each bytes with the given key. eval the decrypted script.
+
+## Usage
+
+Open the web page with browser. Select the file and press the button. The encrypted file will be downloaded.
+
+[Try it Online](https://ganlvtech.github.io/lua-simple-encrypt/)
+
+## Build
+
+```bash
+npm run install
+npm run build
+```
+
+## Development
+
+```bash
+npm run build
+```
+
+Visit <http://localhost:8080/>
 
 ## LICENSE
 

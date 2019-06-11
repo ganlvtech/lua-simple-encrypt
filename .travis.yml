@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+  - "10"
+cache: npm
+before_script:
+  - npm run install
+script:
+  - npm run build
+deploy:
+  - provider: pages
+    local-dir: dist
+    skip-cleanup: true
+    github-token: $GITHUB_TOKEN
+    keep-history: true
+    on:
+      branch: master

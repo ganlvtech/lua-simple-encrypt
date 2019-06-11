@@ -1,17 +1,14 @@
-const _ = require('lodash');
-const jsencrypt = require('jsencrypt');
-const JSEncrypt = jsencrypt.JSEncrypt;
+import JSEncrypt from 'jsencrypt';
+import {range, sampleSize} from 'lodash';
 
 function keyEncrypt(key) {
     let encrypt = new JSEncrypt();
-    encrypt.setPublicKey(
-        '-----BEGIN PUBLIC KEY-----\n' +
-        'MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgH5QQw7WPEowArtgXJ44cVLSqeMH\n' +
-        'o3js/MNm4u4gFJXB3lrbAhtU3QPj39kEkNSp7ji5E7jvEiz4HmKryTIaONwKBXpU\n' +
-        '1OBboGYsXpdio78AAVHRAXEpNPphVN7GQE05UqVRzlZLjBfgv42sAUB5+iCF0T1R\n' +
-        'g/uimzFodQYPLdutAgMBAAE=\n' +
-        '-----END PUBLIC KEY-----'
-    );
+    encrypt.setPublicKey(`-----BEGIN PUBLIC KEY-----
+MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgH5QQw7WPEowArtgXJ44cVLSqeMH
+o3js/MNm4u4gFJXB3lrbAhtU3QPj39kEkNSp7ji5E7jvEiz4HmKryTIaONwKBXpU
+1OBboGYsXpdio78AAVHRAXEpNPphVN7GQE05UqVRzlZLjBfgv42sAUB5+iCF0T1R
+g/uimzFodQYPLdutAgMBAAE=
+-----END PUBLIC KEY-----`);
     let h = encrypt.getKey().encrypt(key);
     let result = [];
     for (let i = 0; i < h.length; i += 2) {
@@ -21,41 +18,23 @@ function keyEncrypt(key) {
 }
 
 function shuffleWithKey(bytes, key) {
-    let result = [];
     let keyBytes = keyEncrypt(key);
-    let resultLen = bytes.length + keyBytes.length;
-    let shuffleIndices = _.shuffle(_.range(resultLen));
-    let byteIndices = [];
-    let keyByteIndices = _.sortBy(_.sampleSize(_.range(resultLen), keyBytes.length));
+    let result = new Array(bytes.length + 1 + keyBytes.length + bytes.length);
+    result[bytes.length] = -1;
+    let bytesIndices = sampleSize(range(keyBytes.length + bytes.length), bytes.length);
+    for (let i = 0; i < bytes.length; i++) {
+        result[i] = bytes.length + 1 + bytesIndices[i];
+        result[result[i]] = bytes[i];
+    }
     let j = 0;
-    for (let i = 0; i < resultLen; ++i) {
-        let resultIndex = shuffleIndices[i];
-        let keyByteIndex = _.indexOf(keyByteIndices, resultIndex);
-        if (keyByteIndex >= 0) {
-            result[resultIndex] = keyBytes[keyByteIndex];
-        } else {
-            result[resultIndex] = bytes[j++];
-            byteIndices.push(resultIndex);
+    for (let i = bytes.length + 1; i < result.length; i++) {
+        if (result[i] === undefined) {
+            result[i] = keyBytes[j];
+            j++;
         }
     }
-    return [result, byteIndices];
+    return result;
 }
-
-function joinShuffleResult(shuffleResult) {
-    let bytes = shuffleResult[0], byteIndices = shuffleResult[1];
-    let byteIndicesLen = byteIndices.length;
-    byteIndices = _.map(byteIndices, function (index) {
-        return index + byteIndicesLen + 1;
-    });
-    byteIndices.push(-1);
-    return _.concat(byteIndices, bytes);
-}
-
-function shuffle(bytes, key) {
-    return joinShuffleResult(shuffleWithKey(bytes, key));
-}
-
-exports.shuffle = shuffle;
 
 function unshuffle(shuffled) {
     let i = 0;
@@ -67,4 +46,4 @@ function unshuffle(shuffled) {
     return bytes;
 }
 
-exports.unshuffle = unshuffle;
+export default shuffleWithKey;

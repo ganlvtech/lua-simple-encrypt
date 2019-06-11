@@ -1,19 +1,38 @@
-const FileSaver = require('file-saver');
-const LocalFileLoader = require('./LocalFileLoader');
-const LuaSimpleXorEncrypt = require('./LuaSimpleXorEncrypt');
+import {readAsByteArray} from './LocalFileLoader';
+import luaSimpleXorEncrypt from './LuaSimpleXorEncrypt';
+import {saveAs} from 'file-saver';
 
-document.addEventListener("DOMContentLoaded", function (e) {
-    document.getElementById('encrypt').addEventListener('click', function (e) {
-        let elFiles = document.getElementById('files');
-        if (elFiles.files[0]) {
-            LocalFileLoader.readAsByteArray(elFiles.files[0], function (bytes, file) {
-                let encrypted = LuaSimpleXorEncrypt.encrypt(bytes, document.getElementById('key').value, {
-                    isGG: document.getElementById('is-gg').checked,
-                    luaVersion: document.getElementById('lua-version').value
-                });
-                let blob = new Blob([encrypted], {type: "application/octet-stream"});
-                FileSaver.saveAs(blob, file.name);
-            });
-        }
+let elFile = document.getElementById('file');
+let elEncrypt = document.getElementById('encrypt');
+let elFileName = document.getElementById('file-name');
+let elKey = document.getElementById('key');
+let elSettings = document.getElementById('settings');
+
+elFile.addEventListener('change', function () {
+  if (elFile.files[0]) {
+    elFileName.textContent = elFile.files[0].name;
+  }
+});
+
+elEncrypt.addEventListener('click', function () {
+  if (elFile.files[0]) {
+    let options = {
+      isGG: false,
+      isLua52: false
+    };
+    switch (elSettings.value) {
+      case 'gg':
+        options.isGG = true;
+        options.isLua52 = true;
+        break;
+      case '52':
+        options.isLua52 = true;
+        break;
+    }
+    readAsByteArray(elFile.files[0], function (bytes, file) {
+      let encrypted = luaSimpleXorEncrypt(bytes, elKey.value, options);
+      let blob = new Blob([encrypted], {type: 'application/octet-stream'});
+      saveAs(blob, file.name);
     });
+  }
 });

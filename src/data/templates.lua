@@ -1,8 +1,18 @@
+-------------------- Template: credit
 -- Lua simple XOR encrypt by Ganlv
--- key = gg.prompt({"请输入密码："}, {""}, {"text"})
-key = "把这里替换成密码"
--- load
-local main = loadstring((function (bytes, key_)
+-- https://github.com/ganlvtech/lua-simple-encrypt
+-------------------- Template: keyInputCode
+key = "PASSWORD"
+-------------------- Template: keyInputCodeGG
+key = gg.prompt({"Password:"}, {""}, {"text"})
+-------------------- Template: main
+local main =
+-------------------- Template: loadstring
+loadstring
+-------------------- Template: load
+load
+-------------------- Template: decoder
+((function (bytes, key_)
     -- http://lua-users.org/wiki/BitUtils
     function bxor(a, b)
         local XOR_l =
@@ -59,10 +69,14 @@ local main = loadstring((function (bytes, key_)
 
     return bytesToString(decode(getDataBytes(bytes), key_))
 end)({
-    -- data
+-------------------- Template: decoderEnd
 }, key))
 if main then
     main()
 else
-    print("密码错误")
+-------------------- Template: keyWrongAlertCode
+    print("WRONG PASSWORD!")
+-------------------- Template: keyWrongAlertCodeGG
+    gg.alert("WRONG PASSWORD!")
+-------------------- Template: keyWrongAlertEnd
 end
