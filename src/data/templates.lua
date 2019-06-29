@@ -4,7 +4,7 @@
 -------------------- Template: keyInputCode
 key = "PASSWORD"
 -------------------- Template: keyInputCodeGG
-key = gg.prompt({"Password:"}, {""}, {"text"})
+key = gg.prompt({"Password:"}, {""}, {"text"})[1]
 -------------------- Template: main
 local main =
 -------------------- Template: loadstring
