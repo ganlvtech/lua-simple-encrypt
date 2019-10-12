@@ -19,7 +19,7 @@
     "compare-version": "^0.1.2",
     "file-saver": "^1.3.8",
     "jsencrypt": "^3.0.0-rc.1",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.13",
     "luamin": "^1.0.4",
     "utf8": "^3.0.0"
   },
