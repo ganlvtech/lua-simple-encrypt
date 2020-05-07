@@ -1,10 +1,10 @@
 -------------------- Template: credit
--- Lua simple XOR encrypt by Ganlv
--- https://github.com/ganlvtech/lua-simple-encrypt
+-- Basit LuaŞifreleyici sifrele.fivemcode.com
+-- https://github.com/ssilistre/lua-sifrele
 -------------------- Template: keyInputCode
-key = "PASSWORD"
+key = "Şifre"
 -------------------- Template: keyInputCodeGG
-key = gg.prompt({"Password:"}, {""}, {"text"})[1]
+key = gg.prompt({"Şifre:"}, {""}, {"text"})[1]
 -------------------- Template: main
 local main =
 -------------------- Template: loadstring
@@ -75,8 +75,8 @@ if main then
     main()
 else
 -------------------- Template: keyWrongAlertCode
-    print("WRONG PASSWORD!")
+    print("Yanlış Şifre!")
 -------------------- Template: keyWrongAlertCodeGG
-    gg.alert("WRONG PASSWORD!")
+    gg.alert("Yanlış Şifre!")
 -------------------- Template: keyWrongAlertEnd
 end
